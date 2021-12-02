@@ -1,0 +1,2 @@
+# Typeclassopedia solutions
+My solutions for typeclassopedia exercises on Haskell type classes. I'll probably end up having to cheat a bit to get to the bottom of some answers since this kind of makes my brain explode.
