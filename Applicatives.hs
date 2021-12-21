@@ -32,3 +32,22 @@ instance MyApplicative ZippyList where
 
   -- (<@>) :: ZippyList (a -> b) -> ZippyList a -> ZippyList b
   (ZippyList gs) <@> (ZippyList xs) = ZippyList (zipWith ($) gs xs)
+
+-- Utility functions
+
+-- Exercise 1. Implement a function
+-- sequenceAL :: Applicative f => [f a] -> f [a]
+-- There is a generalized version of this, sequenceA, which works for any Traversable (see the later section on Traversable),
+-- but implementing this version specialized to lists is a good exercise.
+
+sequenceAL :: Applicative f => [f a] -> f [a]
+sequenceAL = foldr (\x -> (<*>) ((:) <$> x)) (pure [])
+
+-- hlint is actually mental
+
+-- Alternative formulation
+-- Exercise 1. Implement pure and (<*>) in terms of unit and (**), and vice versa.
+
+class Functor f => Monoidal f where
+  unit :: f ()
+  (**) :: f a -> f b -> f (a, b)
