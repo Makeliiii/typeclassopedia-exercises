@@ -18,3 +18,17 @@ instance MyApplicative Maybe where
   (<@>) (Just f) (Just x) = Just (f x)
   (<@>) Nothing _ = Nothing
   (<@>) _ Nothing = Nothing
+
+-- Exercise 2. Determine the correct definition of pure for the ZipList instance of Applicative—there is only one
+-- implementation that satisfies the law relating pure and (<*>).
+
+newtype ZippyList a = ZippyList {getZippyList :: [a]}
+
+instance Functor ZippyList where
+  fmap f (ZippyList xs) = ZippyList (map f xs)
+
+instance MyApplicative ZippyList where
+  pure' x = ZippyList (repeat x)
+
+  -- (<@>) :: ZippyList (a -> b) -> ZippyList a -> ZippyList b
+  (ZippyList gs) <@> (ZippyList xs) = ZippyList (zipWith ($) gs xs)
