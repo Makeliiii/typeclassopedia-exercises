@@ -1,23 +1,23 @@
 -- simple functor definition
 class MyFunctor f where
-    fmap' :: (a -> b) -> f a -> f b
+  fmap' :: (a -> b) -> f a -> f b
 
 -- Exercise 1.
 instance MyFunctor (Either a) where
-    fmap' f (Left x)  = Left x
-    fmap' f (Right x) = Right (f x)
+  fmap' f (Left x) = Left x
+  fmap' f (Right x) = Right (f x)
 
 instance MyFunctor ((->) e) where
-    fmap' f h = f . h
+  fmap' f h = f . h
 
 -- Exercise 2.
 instance MyFunctor ((,) e) where
-    fmap' f (e,x) = (e, f x)
+  fmap' f (e, x) = (e, f x)
 
-data Pair a = Pair a a deriving Show
+data Pair a = Pair a a deriving (Show)
 
 instance MyFunctor Pair where
-    fmap' f (Pair x y) = Pair (f x) (f y)
+  fmap' f (Pair x y) = Pair (f x) (f y)
 
 -- Explain their similarities and differences
 -- I guess they are both pairs so that's in common.
@@ -30,8 +30,8 @@ instance MyFunctor Pair where
 data ITree a = Leaf (Int -> a) | Node [ITree a]
 
 instance MyFunctor ITree where
-    fmap' f (Leaf h) = Leaf (f . h)
-    fmap' f (Node xs) = Node (map (fmap' f) xs)
+  fmap' f (Leaf h) = Leaf (f . h)
+  fmap' f (Node xs) = Node (map (fmap' f) xs)
 
 -- Exercise 4.
 -- Contravariant data types like:
@@ -42,4 +42,15 @@ newtype T a = T (a -> Int)
 newtype Compose f g x = Compose (f (g x))
 
 instance (MyFunctor f, MyFunctor g) => MyFunctor (Compose f g) where
-    fmap' f (Compose x) = Compose ((fmap' . fmap') f x)
+  fmap' f (Compose x) = Compose ((fmap' . fmap') f x)
+
+-- Functor laws
+
+-- Exercise 1.
+data Break a = Yes | No deriving (Eq)
+
+instance MyFunctor Break where
+  fmap' f _ = No
+
+-- Exercise 2.
+-- Think it's only the first one... not going to give examples it just makes sense in my head :)
