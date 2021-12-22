@@ -28,3 +28,12 @@ h :: W Int -> W Int -> W Int
 h x y = bind (`g` y) x
 
 -- holy shit i'm dumb
+
+-- Exercise 1. Implement a Monad instance for the list constructor, []. Follow the types!
+class MyMonad m where
+  return'' :: a -> m a
+  (>>>=) :: m a -> (a -> m b) -> m b
+
+instance MyMonad [] where
+  return'' x = [x]
+  (>>>=) xs f = [y | x <- xs, y <- f x]
