@@ -72,3 +72,10 @@ instance Functor f => Monad (Free f) where
 x <<= k = join $ fmap k x
 
 -- Exercise 2. Now implement join and fmap (liftM) in terms of (>>=) and return.
+
+join' :: Monad m => m (m a) -> m a
+join' x = x >>= id
+
+-- not sure if this was the point but ok...
+fmap'' :: Monad m => (a -> b) -> m a -> m b
+fmap'' f x = x >>= \y -> return $ f y
