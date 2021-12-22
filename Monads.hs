@@ -37,3 +37,28 @@ class MyMonad m where
 instance MyMonad [] where
   return'' x = [x]
   (>>>=) xs f = [y | x <- xs, y <- f x]
+
+-- Exercise 2. Implement a Monad instance for ((->) e).
+instance MyMonad ((->) e) where
+  return'' = const
+
+  -- >>>= :: (e -> a) -> (a -> e -> b) -> e -> b
+  -- I think it's like this
+  (>>>=) x f e = f (x e) e
+
+-- Exercise 3. Implement Functor and Monad instances for Free f, defined as
+-- data Free f a = Var a | Node (f (Free f a))
+-- You may assume that f has a Functor instance. This is known as the free monad built from the functor f.
+
+data Free f a = Var a | Node (f (Free f a))
+
+instance Functor f => Functor (Free f) where
+  fmap f (Var a) = Var (f a)
+  fmap f (Node x) = Node (fmap (fmap f) x)
+
+-- would need to define applicative too if you want to define monad but i'm not going to do it :D
+
+instance Functor f => Monad (Free f) where
+  return = Var
+  (Var a) >>= f = f a
+  (Node x) >>= f = Node (fmap (>>= f) x)
