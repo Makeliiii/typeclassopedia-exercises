@@ -1,3 +1,5 @@
+import Control.Monad (join)
+
 -- some prep with The Trivial Monad
 -- http://blog.sigfpe.com/2007/04/trivial-monad.html
 
@@ -62,3 +64,11 @@ instance Functor f => Monad (Free f) where
   return = Var
   (Var a) >>= f = f a
   (Node x) >>= f = Node (fmap (>>= f) x)
+
+-- Intuition
+-- Exercise 1. Implement (>>=) in terms of fmap (or liftM) and join.
+
+(<<=) :: Monad m => m a -> (a -> m b) -> m b
+x <<= k = join $ fmap k x
+
+-- Exercise 2. Now implement join and fmap (liftM) in terms of (>>=) and return.
