@@ -50,4 +50,14 @@ sequenceAL = foldr (\x -> (<*>) ((:) <$> x)) (pure [])
 
 class Functor f => Monoidal f where
   unit :: f ()
-  (**) :: f a -> f b -> f (a, b)
+  (***) :: f a -> f b -> f (a, b)
+
+pure'' :: Monoidal f => a -> f a
+pure'' x = fmap (const x) unit
+-- (<*@>) :: Monoidal f => f (a -> b) -> f a -> f b
+-- (<*@>) gs xs = FUCKING HOW ????!?!?!?!?!?!?!?!??
+
+unit' :: Applicative f => f ()
+unit' = pure ()
+(**) :: Applicative f => f a -> f b -> f (a,b)
+(**) xs ys = fmap (,) xs <*> ys
