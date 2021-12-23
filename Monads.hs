@@ -1,4 +1,4 @@
-import Control.Monad (join)
+import Control.Monad (ap, join)
 
 -- some prep with The Trivial Monad
 -- http://blog.sigfpe.com/2007/04/trivial-monad.html
@@ -59,8 +59,13 @@ instance Functor f => Functor (Free f) where
   fmap f (Node x) = Node (fmap (fmap f) x)
 
 -- would need to define applicative too if you want to define monad but i'm not going to do it :D
+instance Applicative f => Applicative (Free f) where
+  pure = return
 
-instance Functor f => Monad (Free f) where
+  -- Free f (a -> b) -> Free f a -> Free f b
+  (<*>) = ap
+
+instance Applicative f => Monad (Free f) where
   return = Var
   (Var a) >>= f = f a
   (Node x) >>= f = Node (fmap (>>= f) x)
